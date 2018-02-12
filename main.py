@@ -39,7 +39,7 @@ class Bot:
                                                                           answer['answer'])
         else:
             print "Woops! I'm having trouble finding the answer to your question. " \
-                  "Would you like to see the list of questions that I am able to answer?"
+                  "Would you like to see the list of questions that I am able to answer?\n"
             # set off event for corpus dump
             self.event_stack.append(Event("corpus_dump", text))
 
@@ -48,23 +48,23 @@ class Bot:
         pre_built = [
             {
                 "Question": "Who made you?",
-                "Answer": "I was created by TS-North."
+                "Answer": "I was created by TS-North.\n"
             },
             {
                 "Question": "When were you born?",
-                "Answer": "I first opened my eyes in alpha stage February 9th, 2018."
+                "Answer": "I first opened my eyes in alpha stage February 9th, 2018.\n"
             },
             {
                 "Question": "What is your purpose?",
-                "Answer": "I assist user experience by providing an interactive FAQ chat."
+                "Answer": "I assist user experience by providing an interactive FAQ chat.\n"
             },
             {
                 "Question": "Thanks",
-                "Answer": "Glad I could help!"
+                "Answer": "Glad I could help!\n"
             },
             {
                 "Question": "Thank you",
-                "Answer": "Glad I could help!"
+                "Answer": "Glad I could help!\n"
             }
         ]
         for each_question in pre_built:
@@ -84,8 +84,8 @@ class Event:
 
     def __init__(self, kind, text):
         self.kind = kind
-        self.CONFIRMATIONS = ["Yes", "yes", "Sure", "sure", "Okay", "okay", "That would be nice", "that would be nice"]
-        self.NEGATIONS = ["No", "no", "Don't", "don't", "Dont", "dont"]
+        self.CONFIRMATIONS = ["yes", "sure", "okay", "that would be nice", "yep"]
+        self.NEGATIONS = ["no", "don't", "dont", "nope"]
         self.original_text = text
 
     def handle_response(self, text, bot):
@@ -94,20 +94,22 @@ class Event:
 
     def corpus_dump(self, text, bot):
         for each_confirmation in self.CONFIRMATIONS:
-            if each_confirmation in text:
-                corpus = bot.dump_corpus()
-                corpus = ["-" + s for s in corpus]
-                print "%s%s%s" % ("\n", "\n".join(corpus), "\n")
-                return 0
+            for each_word in text.split(" "):
+                if each_confirmation.lower() == each_word.lower():
+                    corpus = bot.dump_corpus()
+                    corpus = ["-" + s for s in corpus]
+                    print "%s%s%s" % ("\n", "\n".join(corpus), "\n")
+                    return 0
         for each_negation in self.NEGATIONS:
-            if each_negation in text:
-                print "Feel free to ask another question or send an email to %s." % bot.settings['help_email']
-                bot.allow_question()
-                return 0
-            # base case, no confirmation or negation found
-        print "I'm having trouble understand what you are saying. My ability is quite limited, " \
+            for each_word in text.split(" "):
+                if each_negation.lower() == each_word.lower():
+                    print "Feel free to ask another question or send an email to %s.\n" % bot.settings['help_email']
+                    bot.allow_question()
+                    return 0
+        # base case, no confirmation or negation found
+        print "I'm having trouble understanding what you are saying. My ability is quite limited, " \
               "please refer to %s or email %s if I was not able to answer your question. " \
-              "For convenience, a google link has been generated below: \n%s" % (bot.settings['faq_page'],
+              "For convenience, a google link has been generated below: \n%s\n" % (bot.settings['faq_page'],
                                                                                  bot.settings['help_email'],
                                                                                  "https://www.google.com/search?q=%s" %
                                                                                  ("+".join(self.original_text.split(" "))))
