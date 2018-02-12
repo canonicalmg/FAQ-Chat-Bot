@@ -1,6 +1,6 @@
 ![picture](images/use-case.png)
 
-# Basic chat bot (Version 1.2)
+# Basic FAQ chat bot (Version 1.1)
 
 ## How to install
 Download Python 2.7.x - https://www.python.org/downloads/
