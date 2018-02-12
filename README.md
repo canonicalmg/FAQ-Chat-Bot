@@ -1,4 +1,4 @@
-![picture](images/use-case.PNG)
+![picture](images/use-case.png)
 
 # Basic chat bot (Version 1.2)
 
