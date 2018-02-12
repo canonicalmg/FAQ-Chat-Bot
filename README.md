@@ -17,6 +17,8 @@ python main.py
 ``` 
 
 ## About the bot
+![picture](images/cosine.PNG)
+Source[https://en.wikipedia.org/wiki/Cosine_similarity]
+
 The bot is trained on the FAQ page for a given site and uses that as it's corpus to compare the similarity between user input and known FAQ questions. If a good match is found it will return the answer, otherwise it will let the user know there was an issue.
 What determines a 'good' similarity is defined in the Bot.settings object, by default we say that anything over a score of 50% is a good match but feel free to play around with this.
-![picture](images/cosine.PNG)
