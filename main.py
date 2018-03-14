@@ -34,7 +34,7 @@ class Bot:
     def answer_question(self, answer, text):
         if answer['score'] > self.settings['min_score']:
             # set off event asking if the response question is what they were looking for
-            print "\nBest-fit question: %s. (Score: %s)\nAnswer: %s\n" % (answer['question'],
+            print "\nBest-fit question: %s (Score: %s)\nAnswer: %s\n" % (answer['question'],
                                                                           answer['score'],
                                                                           answer['answer'])
         else:
@@ -107,7 +107,7 @@ class Event:
                     bot.allow_question()
                     return 0
         # base case, no confirmation or negation found
-        print "I'm having trouble understanding what you are saying. My ability is quite limited, " \
+        print "I'm having trouble understanding what you are saying. At the time, my ability is quite limited, " \
               "please refer to %s or email %s if I was not able to answer your question. " \
               "For convenience, a google link has been generated below: \n%s\n" % (bot.settings['faq_page'],
                                                                                  bot.settings['help_email'],
