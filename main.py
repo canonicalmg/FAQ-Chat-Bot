@@ -5,9 +5,8 @@ class Bot:
 
     def __init__(self):
         self.event_stack = []
-        self.scopetest = "test"
         self.settings = {
-            "min_score": 0.5,
+            "min_score": 0.2,
             "help_email": "fakeEmail@notArealEmail.com",
             "faq_page": "www.NotActuallyAnFAQ.com"
         }
