@@ -32,14 +32,14 @@ class Bot:
 
     def answer_question(self, answer, text):
         if answer['score'] > self.settings['min_score']:
-            # set off event asking if the response question is what they were looking for
-            print "\nBest-fit question: %s (Score: %s)\nAnswer: %s\n" % (answer['question'],
+            response = "\nBest-fit question: %s (Score: %s)\nAnswer: %s\n" % (answer['question'],
                                                                           answer['score'],
                                                                           answer['answer'])
+            print(gpt_response('rephrase this: ' + response))
         else:
-            print "Woops! I'm having trouble finding the answer to your question. " \
+            response = "Woops! I'm having trouble finding the answer to your question. " \
                   "Would you like to see the list of questions that I am able to answer?\n"
-            # set off event for corpus dump
+            print(gpt_response('rephrase this: ' + response))
             self.event_stack.append(Event("corpus_dump", text))
 
     def pre_built_responses_or_none(self, text):
