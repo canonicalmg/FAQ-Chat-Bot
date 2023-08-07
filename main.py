@@ -1,5 +1,6 @@
 from similarity import find_most_similar
 from corpus import CORPUS
+from code_analysis.utils.gpt_response import gpt_response
 
 class Bot:
 
@@ -32,14 +33,14 @@ class Bot:
 
     def answer_question(self, answer, text):
         if answer['score'] > self.settings['min_score']:
-            # set off event asking if the response question is what they were looking for
-            print "\nBest-fit question: %s (Score: %s)\nAnswer: %s\n" % (answer['question'],
-                                                                          answer['score'],
-                                                                          answer['answer'])
+            response = "\nBest-fit question: %s (Score: %s)\nAnswer: %s\n" % (answer['question'],
+                                                                              answer['score'],
+                                                                              answer['answer'])
+            print(gpt_response('rephrase this: ' + response))
         else:
-            print "Woops! I'm having trouble finding the answer to your question. " \
-                  "Would you like to see the list of questions that I am able to answer?\n"
-            # set off event for corpus dump
+            response = "Woops! I'm having trouble finding the answer to your question. " \
+                       "Would you like to see the list of questions that I am able to answer?\n"
+            print(gpt_response('rephrase this: ' + response))
             self.event_stack.append(Event("corpus_dump", text))
 
     def pre_built_responses_or_none(self, text):
@@ -70,7 +71,6 @@ class Bot:
             if each_question['Question'].lower() in text.lower():
                 print each_question['Answer']
                 return each_question
-
 
     def dump_corpus(self):
         question_stack = []
