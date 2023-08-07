@@ -28,7 +28,8 @@ class Bot:
             answer = self.pre_built_responses_or_none(text)
             if not answer:
                 answer = find_most_similar(text)
-                self.answer_question(answer, text)
+            answer += ' huzzah!'
+            self.answer_question(answer, text)
 
     def answer_question(self, answer, text):
         if answer['score'] > self.settings['min_score']:
