@@ -92,27 +92,22 @@ class Event:
             self.corpus_dump(text, bot)
 
     def corpus_dump(self, text, bot):
-        for each_confirmation in self.CONFIRMATIONS:
-            for each_word in text.split(" "):
-                if each_confirmation.lower() == each_word.lower():
-                    corpus = bot.dump_corpus()
-                    corpus = ["-" + s for s in corpus]
-                    print "%s%s%s" % ("\n", "\n".join(corpus), "\n")
-                    return 0
-        for each_negation in self.NEGATIONS:
-            for each_word in text.split(" "):
-                if each_negation.lower() == each_word.lower():
-                    print "Feel free to ask another question or send an email to %s.\n" % bot.settings['help_email']
-                    bot.allow_question()
-                    return 0
-        # base case, no confirmation or negation found
-        print "I'm having trouble understanding what you are saying. At the time, my ability is quite limited, " \
-              "please refer to %s or email %s if I was not able to answer your question. " \
-              "For convenience, a google link has been generated below: \n%s\n" % (bot.settings['faq_page'],
-                                                                                 bot.settings['help_email'],
-                                                                                 "https://www.google.com/search?q=%s" %
-                                                                                 ("+".join(self.original_text.split(" "))))
-        return 0
+        if any(confirmation.lower() in text.lower().split() for confirmation in self.CONFIRMATIONS):
+            corpus = bot.dump_corpus()
+            corpus = ["-" + s for s in corpus]
+            print("\n{}\n".format("\n".join(corpus)))
+            return 0
+        elif any(negation.lower() in text.lower().split() for negation in self.NEGATIONS):
+            print("Feel free to ask another question or send an email to {}.\n".format(bot.settings['help_email']))
+            bot.allow_question()
+            return 0
+        else:
+            print("I'm having trouble understanding what you are saying. At the time, my ability is quite limited, "
+                  "please refer to {} or email {} if I was not able to answer your question. "
+                  "For convenience, a google link has been generated below: \n{}\n".format(bot.settings['faq_page'],
+                                                                                           bot.settings['help_email'],
+                                                                                           "https://www.google.com/search?q={}".format("+".join(self.original_text.split(" ")))))
+            return 0
 
 
 Bot()
