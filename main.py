@@ -1,5 +1,6 @@
 from similarity import find_most_similar
 from corpus import CORPUS
+from code_analysis.utils.gpt_prompt import gpt_prompt
 
 class Bot:
 
@@ -28,7 +29,9 @@ class Bot:
             answer = self.pre_built_responses_or_none(text)
             if not answer:
                 answer = find_most_similar(text)
-                self.answer_question(answer, text)
+            # Run the response through gpt_prompt() before sending it to the user
+            answer = gpt_prompt(answer)
+            self.answer_question(answer, text)
 
     def answer_question(self, answer, text):
         if answer['score'] > self.settings['min_score']:
