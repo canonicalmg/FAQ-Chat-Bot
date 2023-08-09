@@ -8,7 +8,8 @@ class Bot:
         self.settings = {
             "min_score": 0.2,
             "help_email": "fakeEmail@notArealEmail.com",
-            "faq_page": "www.NotActuallyAnFAQ.com"
+            "faq_page": "www.NotActuallyAnFAQ.com",
+            "OPENAI_API_KEY": "your_openai_api_key_here"
         }
 
         print "Ask a question:"
@@ -30,15 +31,28 @@ class Bot:
                 answer = find_most_similar(text)
                 self.answer_question(answer, text)
 
+    def gpt_prompt(self, query):
+        import openai
+        openai.api_key = self.settings['OPENAI_API_KEY']
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": query}],
+            temperature=1,
+            max_tokens=150,
+        )
+        return response.choices[0].message['content']
+
     def answer_question(self, answer, text):
         if answer['score'] > self.settings['min_score']:
             # set off event asking if the response question is what they were looking for
+            gpt_response = self.gpt_prompt(answer['answer'])
             print "\nBest-fit question: %s (Score: %s)\nAnswer: %s\n" % (answer['question'],
                                                                           answer['score'],
-                                                                          answer['answer'])
+                                                                          gpt_response)
         else:
-            print "Woops! I'm having trouble finding the answer to your question. " \
-                  "Would you like to see the list of questions that I am able to answer?\n"
+            gpt_response = self.gpt_prompt("Woops! I'm having trouble finding the answer to your question. Would you like to see the list of questions that I am able to answer?")
+            print gpt_response
             # set off event for corpus dump
             self.event_stack.append(Event("corpus_dump", text))
 
