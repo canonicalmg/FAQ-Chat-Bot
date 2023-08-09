@@ -15,6 +15,19 @@ class Bot:
         while(True):
             self.allow_question()
 
+    def gpt_prompt(self, query):
+        import openai
+        openai.api_key = settings.OPENAI_API_KEY
+
+        response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[query],
+                    temperature=1,
+                    n=1,
+                    stop=None,
+                )
+        return response.choices[0].message.content.strip()
+
     def allow_question(self):
         # Check for event stack
         potential_event = None
@@ -28,7 +41,8 @@ class Bot:
             answer = self.pre_built_responses_or_none(text)
             if not answer:
                 answer = find_most_similar(text)
-                self.answer_question(answer, text)
+            answer = self.gpt_prompt(answer)
+            self.answer_question(answer, text)
 
     def answer_question(self, answer, text):
         if answer['score'] > self.settings['min_score']:
